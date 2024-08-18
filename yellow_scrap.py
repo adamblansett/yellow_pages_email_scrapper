@@ -28,36 +28,38 @@ class YellowScrapper():
             else:
                 return  False
         except:
-            exit("No more pages to scrap")
+            pass
+            # exit("No more pages to scrap")
 
     def get_data(self, data, cat):
-        data_file1 = open( cat + "_data_file.csv", "w")
+        data_file1 = open( cat + "_data_file.csv", "w", newline="")
         data_file = csv.writer(data_file1)
-        row = []
+        # write header
+        data_file.writerow(['name', 'phone', 'email'])
         for item in data:
+            row = []
             try:
                 name = item.contents[0].find_all("a", {"class": "business-name"})[0].text
-                print(name)
+                # print(name)
                 row.append(name)
-
             except:
                 pass
             try:
                 address = item.contents[1].find_all("p", {"itemprop": "address"})[0].text
-                print(address)
-                row.append(address)
+                # print(address)
+                # row.append(address)
             except:
                 pass
             try:
                 phone = item.contents[1].find_all("div", {"class": "phones phone primary"})[0].text
-                print(phone)
+                # print(phone)
                 row.append(phone)
             except:
                 pass
             try:
                 url = "https://www.yellowpages.com" + item.contents[0].find_all("a", {"class": "business-name"})[0].get('href')
-                print(url)
-                row.append(url)
+                # print(url)
+                # row.append(url)
                 er = requests.get(url)
                 soup = BeautifulSoup(er.content, 'html.parser')
                 erdata = soup.find_all("dd")
@@ -67,13 +69,14 @@ class YellowScrapper():
                             a_tag = ci.find("a",{"class": "email-business"})
                             if a_tag is not None:
                                 email = a_tag['href'].split(":")[1]
-                                print(email)
+                                # print(email)
                                 row.append(email)
+                                break
                     except:
                         pass
             except:
                 pass
-            print('**************************************************')
+            # print('**************************************************')
             data_file.writerow(row)
         data_file1.close()
 
@@ -88,71 +91,73 @@ if __name__ == "__main__":
 
     a = YellowScrapper()
 
-    for i in range(100):
-        categories = [
-            'Storage Units',
-            'Plumbers',
-            'Electricians',
-            'Carpet Cleaning',
-            'Moving Companies',
-            'Pest Control Services',
-            'Self Storage',
-            'Appliance Repair',
-            'Garage Door Repair',
-            'Appliance Parts',
-            'Cleaning Services',
-            'Lawn Mower Repair',
-            'Moving Truck Rental',
-            'AC Repair',
-            'Home Security System Installation',
-            'Garden Centers',
-            'Refrigerator Repair',
-            'Plant Nurseries',
-            'Tree Service',
-            'General Contractors',
-            'Dentists',
-            'Dermatologists',
-            'Optometrists',
-            'Physical Therapy',
-            'Hospitals',
-            'Endocrinologists',
-            'Gynecologists',
-            'Podiatrists',
-            'Neurologists',
-            'Ophthalmologists',
-            'Gastroenterologists',
-            'Pediatricians',
-            'Orthodontists',
-            'Urologists',
-            'Rheumatologists',
-            'Obgyn',
-            'Physicians',
-            'Cardiologists',
-            'Radiology',
-            'Pediatric Dentists',
-            'Auto Parts',
-            'Oil Change',
-            'Tire Shops',
-            'Auto Repair',
-            'Window Tinting',
-            'Towing',
-            'Auto Body Shops',
-            'Car Detailing',
-            'Roadside Assistance',
-            'Auto Glass Repair',
-            'Tire Repair',
-            'Auto Salvage',
-            'Auto Glass',
-            'Car Accessories',
-            'Wheel Alignment',
-            'Used Car Parts',
-            'Car Transport',
-            'Paintless Dent Repair',
-            'Radiator Repair',
-            'Car Alarm Installation'
-        ]
-        for cat in categories:
-            print(cat)
+    categories = [
+        'Storage Units',
+        'Plumbers',
+        'Electricians',
+        'Carpet Cleaning',
+        'Moving Companies',
+        'Pest Control Services',
+        'Self Storage',
+        'Appliance Repair',
+        'Garage Door Repair',
+        'Appliance Parts',
+        'Cleaning Services',
+        'Lawn Mower Repair',
+        'Moving Truck Rental',
+        'AC Repair',
+        'Home Security System Installation',
+        'Garden Centers',
+        'Refrigerator Repair',
+        'Plant Nurseries',
+        'Tree Service',
+        'General Contractors',
+        'Dentists',
+        'Dermatologists',
+        'Optometrists',
+        'Physical Therapy',
+        'Hospitals',
+        'Endocrinologists',
+        'Gynecologists',
+        'Podiatrists',
+        'Neurologists',
+        'Ophthalmologists',
+        'Gastroenterologists',
+        'Pediatricians',
+        'Orthodontists',
+        'Urologists',
+        'Rheumatologists',
+        'Obgyn',
+        'Physicians',
+        'Cardiologists',
+        'Radiology',
+        'Pediatric Dentists',
+        'Auto Parts',
+        'Oil Change',
+        'Tire Shops',
+        'Auto Repair',
+        'Window Tinting',
+        'Towing',
+        'Auto Body Shops',
+        'Car Detailing',
+        'Roadside Assistance',
+        'Auto Glass Repair',
+        'Tire Repair',
+        'Auto Salvage',
+        'Auto Glass',
+        'Car Accessories',
+        'Wheel Alignment',
+        'Used Car Parts',
+        'Car Transport',
+        'Paintless Dent Repair',
+        'Radiator Repair',
+        'Car Alarm Installation'
+    ]
+
+    for cat in categories:
+        print(cat)
+        for i in range(100):
+            print("Range is : " + str(i))
             get_next = a.get_url(cat, args.l, i+1)
             if get_next:
                 continue
