@@ -33,30 +33,31 @@ class YellowScrapper():
     def get_data(self, data, cat):
         data_file1 = open( cat + "_data_file.csv", "w")
         data_file = csv.writer(data_file1)
+        row = []
         for item in data:
             try:
                 name = item.contents[0].find_all("a", {"class": "business-name"})[0].text
                 print(name)
-                data_file.writerow([name])
+                row.append(name)
 
             except:
                 pass
             try:
                 address = item.contents[1].find_all("p", {"itemprop": "address"})[0].text
                 print(address)
-                data_file.writerow([address])
+                row.append(address)
             except:
                 pass
             try:
                 phone = item.contents[1].find_all("div", {"class": "phones phone primary"})[0].text
                 print(phone)
-                data_file.writerow([phone])
+                row.append(phone)
             except:
                 pass
             try:
                 url = "https://www.yellowpages.com" + item.contents[0].find_all("a", {"class": "business-name"})[0].get('href')
                 print(url)
-                data_file.writerow([url])
+                row.append(url)
                 er = requests.get(url)
                 soup = BeautifulSoup(er.content, 'html.parser')
                 erdata = soup.find_all("dd")
@@ -67,13 +68,13 @@ class YellowScrapper():
                             if a_tag is not None:
                                 email = a_tag['href'].split(":")[1]
                                 print(email)
-                                data_file.writerow([email])
+                                row.append(email)
                     except:
                         pass
             except:
                 pass
             print('**************************************************')
-            data_file.writerow(["**************************************************"])
+            data_file.writerow(row)
         data_file1.close()
 
 if __name__ == "__main__":
@@ -151,6 +152,7 @@ if __name__ == "__main__":
             'Car Alarm Installation'
         ]
         for cat in categories:
+            print(cat)
             get_next = a.get_url(cat, args.l, i+1)
             if get_next:
                 continue
