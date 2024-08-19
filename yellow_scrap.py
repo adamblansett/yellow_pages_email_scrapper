@@ -172,7 +172,7 @@ if __name__ == "__main__":
             print(cat)
             for i in range(100):
                 print("Range is : " + str(i))
-                get_next = a.get_url(cat, args.l, i+1, data_file)
+                get_next = a.get_url(cat, l, i+1, data_file)
                 if get_next:
                     continue
                 else:
