@@ -16,12 +16,12 @@ import csv
 
 class YellowScrapper():
 
-    def get_url(self, s, l, p):
+    def get_url(self, s, l, p, data_file):
         r = requests.get("https://www.yellowpages.com/search?search_terms="+s+"&geo_location_terms="+l+"&page="+str(p))
         soup = BeautifulSoup(r.content, 'html.parser')
         data = soup.find_all("div", {"class": "info"})
         x = soup.find_all("div", {"class": "pagination"})
-        self.get_data(data,s)
+        self.get_data(data, data_file)
         try:
             if x[0].find_all("a", {"class": "next ajax-page"})[0].text == "Next":
                 return True
@@ -31,9 +31,7 @@ class YellowScrapper():
             pass
             # exit("No more pages to scrap")
 
-    def get_data(self, data, cat):
-        data_file1 = open( cat + "_data_file.csv", "w", newline="")
-        data_file = csv.writer(data_file1)
+    def get_data(self, data, data_file):
         # write header
         data_file.writerow(['name', 'phone', 'email'])
         for item in data:
@@ -78,16 +76,29 @@ class YellowScrapper():
                 pass
             # print('**************************************************')
             data_file.writerow(row)
-        data_file1.close()
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-l', help="location")
-
-    args = parser.parse_args()
-    if not args.l:
-        exit("Please enter location")
+    locations = [
+        'Florence, KY',
+        'Cincinnati, OH',
+        'Louisvile, KY',
+        'Lexington, KY',
+        'Indianapolis, IN',
+        'Columbus, OH',
+        'Dayton, OH',
+        'Pittsburgh, PA',
+        'Fort Wayne, IN',
+        'Cleveland, OH',
+        'Chicago, IL',
+        'St. Louis, MO',
+        'Nashville, TN',
+        'Knoxville, TN',
+        'Memphis, TN',
+        'Charlotte, NC',
+        'Raleigh, NC',
+        'Detroit, MI',
+    ]
 
     a = YellowScrapper()
 
@@ -154,13 +165,18 @@ if __name__ == "__main__":
         'Car Alarm Installation'
     ]
 
-    for cat in categories:
-        print(cat)
-        for i in range(100):
-            print("Range is : " + str(i))
-            get_next = a.get_url(cat, args.l, i+1)
-            if get_next:
-                continue
-            else:
-                break
+    data_file1 = open("data_file.csv", "w", newline="")
+    data_file = csv.writer(data_file1)
+    for l in locations:
+        for cat in categories:
+            print(cat)
+            for i in range(100):
+                print("Range is : " + str(i))
+                get_next = a.get_url(cat, args.l, i+1, data_file)
+                if get_next:
+                    continue
+                else:
+                    break
+
+    data_file1.close()
 
