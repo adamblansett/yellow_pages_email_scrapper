@@ -165,9 +165,10 @@ if __name__ == "__main__":
         'Car Alarm Installation'
     ]
 
-    data_file1 = open("data_file.csv", "w", newline="")
+    data_file1 = open("data_file1.csv", "w", newline="")
     data_file = csv.writer(data_file1)
     for l in locations:
+        print(l)
         for cat in categories:
             print(cat)
             for i in range(100):
