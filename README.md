@@ -1,3 +1,5 @@
+Deprecated - Yellow Pages now blocks bots from scrolling 
+
 Yellow Pages Email Scrapper
 
 A basic scrapper. More to some.
